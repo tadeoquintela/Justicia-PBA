@@ -450,12 +450,15 @@ aside.open .grab em::before{transform:rotate(180deg)}
 
 /* barra de agrupamiento en celular */
 .granmob{display:none}
-.granmob b{font-size:8.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+.granmob b{font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
   color:var(--gris);flex:none}
-.granmob button{flex:1;background:rgba(116,59,188,.16);border:1px solid rgba(155,111,217,.34);
-  color:var(--gris);font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:.4px;
-  text-transform:uppercase;padding:8px 6px;border-radius:20px;cursor:pointer;white-space:nowrap}
-.granmob button.on{background:var(--violeta);color:#fff;border-color:var(--violeta-cl)}
+.granmob .seg{flex:1;min-width:0;display:flex;gap:3px;background:rgba(0,0,0,.3);
+  border:1px solid rgba(155,111,217,.3);border-radius:9px;padding:3px}
+.granmob button{flex:1;min-width:0;background:none;border:0;
+  color:var(--gris);font-family:inherit;font-size:10px;font-weight:700;letter-spacing:.2px;
+  text-transform:uppercase;padding:7px 4px;border-radius:7px;cursor:pointer;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:.15s}
+.granmob button.on{background:var(--violeta);color:#fff;box-shadow:0 2px 8px rgba(116,59,188,.5)}
 
 /* ======== leyenda larga ======== */
 .legend.lista #legBody{max-height:38vh;overflow-y:auto;padding-right:4px}
@@ -487,11 +490,13 @@ aside.open .grab em::before{transform:rotate(180deg)}
   .granbar b{display:none}
 }
 @media(max-width:900px){
-  .granmob{display:flex;align-items:center;gap:6px;
-    position:absolute;left:8px;right:8px;top:53px;z-index:7;
-    background:rgba(27,15,39,.93);border:1px solid rgba(232,183,63,.4);
-    border-radius:12px;padding:6px 9px;backdrop-filter:blur(6px);
+  .granmob{display:flex;align-items:center;gap:8px;
+    position:absolute;left:8px;right:8px;top:52px;z-index:7;
+    background:rgba(27,15,39,.93);border:1px solid rgba(155,111,217,.32);
+    border-radius:12px;padding:5px 9px 5px 11px;backdrop-filter:blur(6px);
     box-shadow:0 6px 18px rgba(0,0,0,.35)}
+  .modesel{flex:0 0 148px;width:148px}
+  .modesel select{font-size:11px;padding:10px 30px 10px 9px;text-overflow:ellipsis}
   .granmob.off{display:none}
   .tabs button{font-size:8.5px;letter-spacing:.2px;padding:11px 2px}
   .legend.lista #legBody{max-height:30vh}
@@ -561,8 +566,10 @@ aside.open .grab em::before{transform:rotate(180deg)}
 
     <div class="granmob off" id="granmob">
       <b>Agrupar</b>
-      <button data-g="dep" class="on">Depto. judicial</button>
-      <button data-g="sec">Sección electoral</button>
+      <span class="seg">
+        <button data-g="dep" class="on">Departamento</button>
+        <button data-g="sec">Sección</button>
+      </span>
     </div>
 
     <div class="modebar" id="modebar">
