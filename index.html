@@ -1037,6 +1037,7 @@ function pintar(){
   document.querySelector('.legend').classList.toggle('lista', ley.length>9);
   document.getElementById('granbar').classList.toggle('off', !f.grupo);
   document.getElementById('granmob').classList.toggle('off', !f.grupo);
+  if(selGrupo && AGG[gran][selGrupo]) resaltarGrupo(selGrupo);
   document.getElementById('granm').classList.toggle('off', !f.grupo);
 }
 
@@ -1171,12 +1172,21 @@ function select(n,doZoom){
   if(esMovil()) abrirHoja(true); else grabLab.textContent=n;
   if(doZoom && m.cx!=null){ focusOn(m.cx,m.cy,Math.max(0.55,Math.sqrt(m.area||.05)*3.2)); }
 }
+function resaltarGrupo(k){
+  const g=bndNodes[gran][k];
+  if(g){ g.style.display=''; g.querySelectorAll('.gbnd').forEach(p=>p.classList.add('hi')); }
+  M.forEach(m=>{ if(claveG(m)===k && nodes[m.n]) nodes[m.n].querySelectorAll('path').forEach(p=>p.classList.add('sel')); });
+}
+/* vuelve a dibujar la ficha abierta sin cambiar de pestaña ni desplegar la hoja */
+function refrescarFicha(){
+  const cont=document.getElementById('ficha');
+  if(selName){ const m=M.find(x=>x.n===selName); if(m) cont.innerHTML=fichaHTML(m); }
+  else if(selGrupo && AGG[gran][selGrupo]) cont.innerHTML=fichaGrupoHTML(selGrupo);
+}
 function selectGrupo(tipo,k,doZoom){
   if(gran!==tipo) setGran(tipo);
   selGrupo=k; selName=null; limpiarSel();
-  const g=bndNodes[tipo][k];
-  if(g){ g.style.display=''; g.querySelectorAll('.gbnd').forEach(p=>p.classList.add('hi')); }
-  M.forEach(m=>{ if(claveG(m)===k && nodes[m.n]) nodes[m.n].querySelectorAll('path').forEach(p=>p.classList.add('sel')); });
+  resaltarGrupo(k);
   document.getElementById('ficha').innerHTML=fichaGrupoHTML(k);
   activarTab('ficha');
   if(esMovil()) abrirHoja(true); else grabLab.textContent=nombreG(k);
@@ -1416,9 +1426,8 @@ function llenarSelects(){
   ['modo','modoM','modoO'].forEach(id=>{ document.getElementById(id).innerHTML=html; });
 }
 function setModo(v){
-  modo=v; pintar(); renderLista();
+  modo=v; pintar(); renderLista(); refrescarFicha();
   ['modo','modoM','modoO'].forEach(id=>{ document.getElementById(id).value=v; });
-  if(selGrupo) selectGrupo(gran,selGrupo,false);
 }
 function setGran(g){
   gran=g;
@@ -1426,8 +1435,11 @@ function setGran(g){
   document.querySelectorAll('#aggGran .chip').forEach(b=>b.classList.toggle('on',b.dataset.g===g));
   document.querySelectorAll('#granO .chip').forEach(b=>b.classList.toggle('on',b.dataset.g===g));
   selGrupo=null; limpiarSel();
-  if(selName) select(selName);
-  pintar(); renderAgg();
+  if(selName){
+    const g=nodes[selName];
+    if(g) g.querySelectorAll('path').forEach(p=>p.classList.add('sel'));
+  }
+  pintar(); renderAgg(); renderLista(); refrescarFicha();
 }
 function syncCapas(){
   document.querySelectorAll('#capas .chip').forEach(b=>{
